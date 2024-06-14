@@ -2,6 +2,7 @@
 
 namespace AntonyThorpe\SilverShopRelatedProducts;
 
+use SilverStripe\ORM\SS_List;
 use SilverStripe\ORM\DataExtension;
 use SilverStripe\Forms\FieldList;
 use SilverShop\Page\Product;
@@ -22,83 +23,80 @@ use Symbiote\GridFieldExtensions\GridFieldEditableColumns;
  */
 class HasRelatedProducts extends DataExtension
 {
-    private static $many_many = [
+    /**
+     * @config
+     */
+    private static array $many_many = [
         'RelatedProductsRelation' => Product::class,
     ];
 
-    private static $many_many_extraFields = [
+    /**
+     * @config
+     */
+    private static array $many_many_extraFields = [
         'RelatedProductsRelation' => [
             'RelatedOrder' => 'Int',
             'RelatedTitle' => 'Varchar'
         ]
     ];
 
-    /**
-     * @param FieldList $fields
-     */
-    public function updateCMSFields(FieldList $fields)
+    public function updateCMSFields(FieldList $fields): void
     {
-        if ($this->owner->ID) {
-            $fields->addFieldsToTab('Root.' . _t(__CLASS__ . '.Related', 'Related'), [
+        if ($this->getOwner()->ID) {
+            $fields->addFieldsToTab('Root.' . _t(self::class . '.Related', 'Related'), [
                 $grid = GridField::create(
                     'RelatedProductsRelation',
                     _t(
-                        __CLASS__ . '.RelatedProductsRelation',
+                        self::class . '.RelatedProductsRelation',
                         'Related Products'
                     ),
-                    $this->owner->RelatedProductsRelation()->sort('RelatedOrder', 'ASC'),
+                    $this->getOwner()->RelatedProductsRelation()->sort('RelatedOrder', 'ASC'),
                     $relatedConfig = GridFieldConfig_RelationEditor::create()
-                        ->addComponent(new GridFieldEditableColumns(), GridFieldEditButton::class)
+                        ->addComponent(GridFieldEditableColumns::create(), GridFieldEditButton::class)
                         ->removeComponentsByType([
                             GridFieldAddNewButton::class,
                             GridFieldEditButton::class,
                             GridFieldArchiveAction::class
                         ])
                 )->setDescription(
-                    _t(__CLASS__ . '.Description', 'Link related products using the search field top right and then add a title for this related product.  Drag and drop to reorder.')
+                    _t(self::class . '.Description', 'Link related products using the search field top right and then add a title for this related product.  Drag and drop to reorder.')
                 )
             ]);
 
             // Add RelatedTitle to GridField
-            $grid->getConfig()->getComponentByType(GridFieldEditableColumns::class)->setDisplayFields([
-                'RelatedTitle' => function ($record, $column, $grid) {
-                    return new TextField($column);
-                }
-            ]);
+            $columns = $grid->getConfig()->getComponentByType(GridFieldEditableColumns::class);
+            if ($columns) {
+                $columns->setDisplayFields([
+                    'RelatedTitle' => fn($record, $column, $grid): TextField => TextField::create($column)
+                ]);
+            }
 
             // Format the autocomplete search for a product to link
-            $relatedConfig->getComponentByType(GridFieldAddExistingAutocompleter::class)
-                ->setSearchFields(array('InternalItemID', 'Title'))
-                ->setResultsFormat('$InternalItemID - $Title');
+            $autocompleter = $relatedConfig->getComponentByType(GridFieldAddExistingAutocompleter::class);
+            if ($autocompleter) {
+                $autocompleter->setSearchFields(['InternalItemID', 'Title'])
+                    ->setResultsFormat('$InternalItemID - $Title');
+            }
 
             // Add reorder capabilities when more than two items
-            if ($this->owner->RelatedProductsRelation()->count() > 1) {
+            if ($this->getOwner()->RelatedProductsRelation()->count() > 1) {
                 $relatedConfig->addComponent(GridFieldOrderableRows::create('RelatedOrder')/*->setRepublishLiveRecords(true)*/);
                 // @todo uncomment post symbiote/silverstripe-gridfieldextensions:3.2.1
             }
         }
     }
 
-    /**
-     * @param int $limit [optional]
-     * @param bool $random [optional]
-     * @return \SilverStripe\ORM\SS_List
-     */
-    public function getRelatedProducts($limit = null, $random = false)
+    public function getRelatedProducts(int $limit = null, bool $random = false): SS_List
     {
-        $related_products = $this->owner->RelatedProductsRelation();
+        $related_products = $this->getOwner()->RelatedProductsRelation();
 
-        if ($random) {
-            $related_products = $related_products->sort("RAND()");
-        } else {
-            $related_products = $related_products->sort('RelatedOrder');
-        }
+        $related_products = $random ? $related_products->sort("RAND()") : $related_products->sort('RelatedOrder');
 
         if ($limit !== null) {
             $related_products = $related_products->limit($limit);
         }
 
-        $this->owner->extend('updateRelatedProducts', $related_products, $limit, $random);
+        $this->getOwner()->extend('updateRelatedProducts', $related_products, $limit, $random);
 
         return $related_products;
     }
@@ -106,8 +104,8 @@ class HasRelatedProducts extends DataExtension
     /**
      * Cleanup
      */
-    public function onBeforeDelete()
+    public function onBeforeDelete(): void
     {
-        $this->owner->RelatedProductsRelation()->removeAll();
+        $this->getOwner()->RelatedProductsRelation()->removeAll();
     }
 }
