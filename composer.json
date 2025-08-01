@@ -1,24 +1,28 @@
 {
-	"name": "antonythorpe/silvershop-relatedproducts",
-	"description": "SilverShop submodule which allows you to specify related products for any Buyable",
-	"type": "silverstripe-vendormodule",
-	"keywords": ["SilverStripe", "SilverShop", "related products"],
-	"require": {
+    "name": "antonythorpe/silvershop-relatedproducts",
+    "description": "SilverShop submodule which allows you to specify related products for any Buyable",
+    "type": "silverstripe-vendormodule",
+    "keywords": [
+        "SilverStripe",
+        "SilverShop",
+        "related products"
+    ],
+    "require": {
         "php": "^8.1",
-		"silvershop/core": "dev-main",
+        "silvershop/core": "^3.2.0",
         "silverstripe/cms": "^5"
-	},
-	"autoload": {
-		"psr-4": {
-			"AntonyThorpe\\SilverShopRelatedProducts\\": "src/"
-		}
-	},
-	"extra": {
-		"branch-alias": {
-			"dev-master": "2.*-dev"
-		}
-	},
-	"license": "MIT",
+    },
+    "autoload": {
+        "psr-4": {
+            "AntonyThorpe\\SilverShopRelatedProducts\\": "src/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.*-dev"
+        }
+    },
+    "license": "MIT",
     "minimum-stability": "dev",
     "prefer-stable": true
 }
