@@ -1,0 +1,31 @@
+name: CI
+
+# Controls when the workflow will run
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  phpstan:
+    name: PHPStan Static Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+          tools: composer:v2
+      - name: Install Dependencies
+        run: |
+          composer config allow-plugins.composer/installers true
+          composer config allow-plugins.silverstripe/recipe-plugin true
+          composer config allow-plugins.silverstripe/vendor-plugin true
+          composer config allow-plugins.phpstan/extension-installer true
+          composer require --dev cambis/silverstan --no-update
+          composer update --no-interaction --prefer-dist
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse -c phpstan.neon --memory-limit 1G
