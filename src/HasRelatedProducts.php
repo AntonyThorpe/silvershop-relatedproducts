@@ -2,8 +2,9 @@
 
 namespace AntonyThorpe\SilverShopRelatedProducts;
 
+use SilverStripe\Core\Extension;
+use SilverStripe\ORM\ManyManyList;
 use SilverStripe\ORM\SS_List;
-use SilverStripe\ORM\DataExtension;
 use SilverStripe\Forms\FieldList;
 use SilverShop\Page\Product;
 use SilverStripe\Forms\GridField\GridField;
@@ -19,9 +20,11 @@ use Symbiote\GridFieldExtensions\GridFieldEditableColumns;
 /**
  * Can be applied to any buyable to add the related product feature.
  *
- * @link(https://github.com/dynamic/silverstripe-products/blob/4866c6a677d560fef4e7eee8b435f2b7533ff158/src/Extension/RelatedProductsDataExtension.php)
+ * @link https://github.com/dynamic/silverstripe-products/blob/4866c6a677d560fef4e7eee8b435f2b7533ff158/src/Extension/RelatedProductsDataExtension.php
+ * @method ManyManyList<Product> RelatedProductsRelation()
+ * @extends Extension<(Product & static)>
  */
-class HasRelatedProducts extends DataExtension
+class HasRelatedProducts extends Extension
 {
     /**
      * @config
@@ -40,10 +43,10 @@ class HasRelatedProducts extends DataExtension
         ]
     ];
 
-    public function updateCMSFields(FieldList $fields): void
+    public function updateCMSFields(FieldList $fieldList): void
     {
         if ($this->getOwner()->ID) {
-            $fields->addFieldsToTab('Root.' . _t(self::class . '.Related', 'Related'), [
+            $fieldList->addFieldsToTab('Root.' . _t(self::class . '.Related', 'Related'), [
                 $grid = GridField::create(
                     'RelatedProductsRelation',
                     _t(
