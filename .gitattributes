@@ -2,7 +2,4 @@
 /.editorconfig export-ignore
 /.gitattributes export-ignore
 /.gitignore export-ignore
-/.scrutinizer.yml export-ignore
-/changelog.md export-ignore
 /contributing.md export-ignore
-/LICENSE

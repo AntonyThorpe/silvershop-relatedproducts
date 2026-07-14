@@ -4,7 +4,6 @@ namespace AntonyThorpe\SilverShopRelatedProducts;
 
 use SilverStripe\Core\Extension;
 use SilverStripe\ORM\ManyManyList;
-use SilverStripe\ORM\SS_List;
 use SilverStripe\Forms\FieldList;
 use SilverShop\Page\Product;
 use SilverStripe\Forms\GridField\GridField;
@@ -18,7 +17,7 @@ use Symbiote\GridFieldExtensions\GridFieldOrderableRows;
 use Symbiote\GridFieldExtensions\GridFieldEditableColumns;
 
 /**
- * Can be applied to any buyable to add the related product feature.
+ * Can be applied to any Product to add the related product feature.
  *
  * @link https://github.com/dynamic/silverstripe-products/blob/4866c6a677d560fef4e7eee8b435f2b7533ff158/src/Extension/RelatedProductsDataExtension.php
  * @method ManyManyList<Product> RelatedProductsRelation()
@@ -83,19 +82,18 @@ class HasRelatedProducts extends Extension
 
             // Add reorder capabilities when more than two items
             if ($this->getOwner()->RelatedProductsRelation()->count() > 1) {
-                $relatedConfig->addComponent(GridFieldOrderableRows::create('RelatedOrder')/*->setRepublishLiveRecords(true)*/);
-                // @todo uncomment post symbiote/silverstripe-gridfieldextensions:3.2.1
+                $relatedConfig->addComponent(GridFieldOrderableRows::create('RelatedOrder')->setRepublishLiveRecords(true));
             }
         }
     }
 
-    public function getRelatedProducts(int $limit = null, bool $random = false): SS_List
+    public function getRelatedProducts(int $limit = 0, bool $random = false): ManyManyList
     {
         $related_products = $this->getOwner()->RelatedProductsRelation();
 
         $related_products = $random ? $related_products->sort("RAND()") : $related_products->sort('RelatedOrder');
 
-        if ($limit !== null) {
+        if ($limit !== 0) {
             $related_products = $related_products->limit($limit);
         }
 

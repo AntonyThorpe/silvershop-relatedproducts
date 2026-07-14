@@ -1,7 +1,7 @@
 <% if $RelatedProducts %>
-    <div id="RelatedProducts" class="typography">
+    <div id="RelatedProducts">
     	<h3>Related Products</h3>
-    	<ul class="related-products">
+    	<ul>
     		<% loop $RelatedProducts %>
     			<% include SilverShop\Includes\ProductGroupItem %>
     		<% end_loop %>

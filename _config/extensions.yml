@@ -1,6 +1,6 @@
 ---
-Name: Module-extensions
-After: core/config#shopconfig
+Name: silvershop-relatedproducts-extensions
+After: '#silvershop-config'
 ---
 SilverShop\Page\Product:
   extensions:

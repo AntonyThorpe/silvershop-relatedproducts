@@ -8,14 +8,14 @@
 A new tab `Related` will appear within each product.
 
 ## Templates
-In your `{theme}/templates/SilverShop/Page/Layout/Product.ss` add `<% include RelatedProducts %>` under the content.
+In your `{yourtheme/app}/templates/SilverShop/Page/Layout/Product.ss` add `<% include AntonyThorpe\SilverShopRelatedProducts\RelatedProducts %>` under the content.
 
-To customise, copy `vendor/antonythorpe/silvershop-relatedproducts/templates/includes/RelatedProducts.ss` to your `{theme}/templates/includes` folder and adjust as needed.
+To customise, copy `vendor/antonythorpe/silvershop-relatedproducts/templates/AntonyThorpe/SilverShopRelatedProducts/RelatedProducts.ss` to your `{yourtheme/app}/templates/AntonyThorpe/SilverShopRelatedProducts/` folder and adjust as needed.
 
-Optional: in your `{theme}/templates/SilverShop/includes/ProductGroupItem.ss` add
+Optional: in your `{yourtheme/app}/templates/SilverShop/includes/ProductGroupItem.ss` add
 ```html
 <% if $RelatedTitle %>
-    <h3 class="related-title">$RelatedTitle</h3>
+    <h3>$RelatedTitle</h3>
 <% end_if %>
 ```
 to capture the Related Title against each listed related product.
