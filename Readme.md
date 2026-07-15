@@ -2,6 +2,7 @@
 SilverShop submodule which allows you to specify related products for any Product
 
 [![Latest Stable Version](https://poser.pugx.org/antonythorpe/silvershop-relatedproducts/v/stable)](https://packagist.org/packages/antonythorpe/silvershop-relatedproducts)
+[![CI](https://github.com/antonythorpe/silvershop-relatedproducts/actions/workflows/ci.yml/badge.svg)](https://github.com/antonythorpe/silvershop-relatedproducts/actions/workflows/ci.yml)
 [![Total Downloads](https://poser.pugx.org/antonythorpe/silvershop-relatedproducts/downloads)](https://packagist.org/packages/antonythorpe/silvershop-relatedproducts)
 [![License](https://poser.pugx.org/antonythorpe/silvershop-relatedproducts/license)](https://packagist.org/packages/antonythorpe/silvershop-relatedproducts)
 
